@@ -2,42 +2,42 @@ package in.ineuron.model;
 
 import java.io.Serializable;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 
 
 /**
  * 
  * @author Sowmya Peddi
- * 
- * Its temporary memory that holds the data for temporarily.
-   Cache at client side will hold server data and uses it across the multiple same requests to reduce the network calls between client(Java Application) and server(DB).
-   Hibernate supports 2 levels of caching 
-  1. First Level cache (L1 Cache/session Cache/default) 
-    -----------------------------------------------------
-   Is a session cache that stores copies of entities retrieved from the DB. Enabled by default.
-   Improves performance by reducing number of database Queries to be executed.
-   Associated to specific session Object, scope: session scope, session closed = cache gone, 
-   eg: live Cricket Score, trading, weather report.
-   session.save(obj), session.saveOrUpdate(obj),
-   session.delete(obj) methods keep the Obj in l1 cache until tx.commit() is called.
-   session.get(), session.load() will get the object and keep it in L1 cache and same object will be used across multiple session.get() method calls wit same entity obj id.    
-  
-   session.evict() : Remove requested Object from L1-Cache (manually removing object).
-   session.clear() : Remove all objects from L1-cache.
-   In l1-cache, duplicate objects won't be permitted.
- *
+ * This Caching is associated with sessionFactory so it is called as "Global cache".
+Application will start to search for entity Object in below mentioned order
+   1. L1 cache of current session.
+   2. If not present in L1 cache then searches in L2 cache.
+   3. If not present in L2 cache then searches in Database, then obtained record is then placed in both L1 & L2 cache then give it to Application.
+      L2 cache is not configured by Hibernate by default, Programmer need to configure manually, It can be enable or disable based on our requirement.
+	  Hibernate supports L2 cache through "EHCache(EasyHibernateCache)".
+
+To configure EHCache in our Hibernate projects we use 
+------------------------------------------------------
+   1. Add EHCache jars to the project (present in hibernate> lib> optional> ehcache)
+   2. Make changes in hibernate.cfg.xml file as shown below
+    <property name="hibernate.cache.use_second_level_cache" >true</property>
+    <property name="hibernate.cache.region.factory_class" >org.hibernate.cache.ehcache.EhCacheRegionFactory</property>
+   3. In the model class inform hibernate to use Caching strategy.
+    @Cache(usage=CacheConcurrencyStrategy.READ_ONLY) after @Entity annotation
  */
 @Entity
+@Cache(usage=CacheConcurrencyStrategy.READ_ONLY)   // It Specifies Caching Strategy
 public class InsurancePolicy implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3940931891329205809L;
 
 	@Id

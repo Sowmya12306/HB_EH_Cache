@@ -8,5 +8,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/hibernate"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Mysql"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/EHCache"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

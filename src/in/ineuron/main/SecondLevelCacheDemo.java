@@ -8,7 +8,7 @@ import org.hibernate.Transaction;
 import in.ineuron.model.InsurancePolicy;
 import in.ineuron.util.HibernateUtil;
 
-public class FirstCacheDemo {	
+public class SecondLevelCacheDemo {	
 
 	public static void main(String[] args) {
 		Session session=null;
